@@ -6,7 +6,8 @@
 </p>
 
 <p align="center">
-  <img src="Assets/logo_catchit.png" alt="CATch It! Logo" width="220"/>
+  <img src="Assets/game_logo.png" alt="CATch It! Game Logo" width="180"/><br/>
+  <img src="Assets/logo_catchit.png" alt="CATch It! Logo" width="260"/>
 </p>
 
 ---
