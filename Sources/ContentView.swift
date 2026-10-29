@@ -9,7 +9,7 @@ struct ContentView: View {
                 GamePlayView(gameState: gameState)
                     .transition(.opacity)
             } else {
-                // Persistent background for real Liquid Glass optical refraction
+                // Persistent background
                 GeometryReader { geo in
                     AssetImageView(name: "clean_bg", contentMode: .fill)
                         .frame(width: geo.size.width, height: geo.size.height)
@@ -49,14 +49,14 @@ struct ContentView: View {
     }
 }
 
-/// Bottom navigation: three circular native Liquid Glass buttons
+/// Bottom navigation: three circular Liquid Glass buttons with original colors, symmetrically centered at x = 683
 struct GlassDock: View {
     @Bindable var gameState: GameState
 
     private let items: [(tab: AppTab, icon: String, x: CGFloat)] = [
         (.typeGame, "icon_yarn", 264),
-        (.home,     "icon_paw",  697),
-        (.settings, "icon_gear", 1135)
+        (.home,     "icon_paw",  683),
+        (.settings, "icon_gear", 1102)
     ]
 
     var body: some View {
@@ -69,19 +69,41 @@ struct GlassDock: View {
                         gameState.currentTab = item.tab
                     }
                 } label: {
-                    AssetImageView(name: item.icon)
-                        .frame(width: 86, height: 86)
-                        .frame(width: 127, height: 126)
-                        .contentShape(Circle())
+                    ZStack {
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        Color(red: 0.85, green: 0.93, blue: 1.0).opacity(selected ? 0.82 : 0.65),
+                                        Color(red: 0.74, green: 0.86, blue: 0.98).opacity(selected ? 0.75 : 0.55)
+                                    ],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .glassEffect(.regular, in: Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(
+                                        selected ?
+                                            Color(red: 0.38, green: 0.56, blue: 0.82) :
+                                            Color.white.opacity(0.65),
+                                        lineWidth: selected ? 3.5 : 1.5
+                                    )
+                            )
+                            .shadow(
+                                color: Color.black.opacity(selected ? 0.22 : 0.14),
+                                radius: selected ? 10 : 6,
+                                y: 4
+                            )
+                            .frame(width: 127, height: 126)
+
+                        AssetImageView(name: item.icon)
+                            .frame(width: 86, height: 86)
+                    }
+                    .contentShape(Circle())
                 }
                 .buttonStyle(.plain)
-                .glassEffect(
-                    (selected
-                        ? Glass.regular.tint(Color(red: 0.35, green: 0.75, blue: 0.98).opacity(0.38))
-                        : Glass.regular
-                    ).interactive(),
-                    in: .circle
-                )
                 .position(x: item.x, y: selected ? 836 : 862)
             }
         }

@@ -6,6 +6,7 @@ final class FullSizeWindowAccessor: NSView {
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
         guard let window = self.window else { return }
+        window.title = "CATch It"
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
         window.styleMask.insert(.fullSizeContentView)
@@ -34,7 +35,7 @@ struct CatChItApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("CATch It") {
             ContentView()
                 .preferredColorScheme(.light)
                 .ignoresSafeArea()

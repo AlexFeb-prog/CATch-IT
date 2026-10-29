@@ -5,37 +5,57 @@ struct SettingsView: View {
     @State private var section: SettingsSection = .gioco
 
     private let labelFill = Color(red: 0.25, green: 0.45, blue: 0.62)
+    private let pillBg = Color(red: 0.78, green: 0.86, blue: 0.94).opacity(0.72)
 
     var body: some View {
         ZStack {
-            // 1. Back button (<) top-left with pure native Liquid Glass
+            // 1. Back button (<) top-left with Liquid Glass and original colors
             Button {
                 SoundManager.shared.playSound(named: "ui_tap")
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
                     gameState.currentTab = .home
                 }
             } label: {
-                OutlinedText(
-                    text: "<",
-                    fontSize: 48,
-                    fillColor: .white,
-                    strokeColor: Color(white: 0.22),
-                    lineWidth: 1.6
-                )
-                .frame(width: 98, height: 80)
+                ZStack {
+                    Capsule(style: .continuous)
+                        .fill(pillBg)
+                        .glassEffect(.regular, in: Capsule(style: .continuous))
+                        .overlay(
+                            Capsule(style: .continuous)
+                                .stroke(Color(white: 0.28), lineWidth: 1.8)
+                        )
+                        .shadow(color: Color.black.opacity(0.20), radius: 5, y: 3)
+                        .frame(width: 98, height: 80)
+
+                    OutlinedText(
+                        text: "<",
+                        fontSize: 48,
+                        fillColor: .white,
+                        strokeColor: Color(white: 0.22),
+                        lineWidth: 1.6
+                    )
+                }
                 .contentShape(Capsule())
             }
             .buttonStyle(.plain)
-            .glassEffect(.regular.interactive(), in: .capsule)
             .position(x: 249, y: 155)
 
-            // 2. Audio | Game segmented switch top-right with pure native Liquid Glass
-            HStack(spacing: 4) {
-                segmentButton(.audio, title: "Audio")
-                segmentButton(.gioco, title: "Game")
+            // 2. Audio | Game segmented switch top-right with original colors and Liquid Glass
+            HStack(spacing: 0) {
+                segmentButton(.audio, title: "Audio", isLeft: true)
+                segmentButton(.gioco, title: "Game", isLeft: false)
             }
-            .padding(4)
-            .glassEffect(.regular, in: .capsule)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(Color(red: 0.82, green: 0.89, blue: 0.95).opacity(0.72))
+                    .glassEffect(.regular, in: Capsule(style: .continuous))
+            )
+            .clipShape(Capsule(style: .continuous))
+            .overlay(
+                Capsule(style: .continuous)
+                    .stroke(Color(white: 0.22), lineWidth: 1.8)
+            )
+            .shadow(color: Color.black.opacity(0.18), radius: 6, y: 3)
             .position(x: 1110, y: 155)
 
             // 3. Main Liquid Glass Panel (Audio or Game)
@@ -50,7 +70,7 @@ struct SettingsView: View {
     }
 
     // MARK: - Segmented Switch Button
-    private func segmentButton(_ target: SettingsSection, title: String) -> some View {
+    private func segmentButton(_ target: SettingsSection, title: String, isLeft: Bool) -> some View {
         let selected = section == target
         return Button {
             SoundManager.shared.playSound(named: "ui_tap")
@@ -58,88 +78,126 @@ struct SettingsView: View {
                 section = target
             }
         } label: {
-            OutlinedText(
-                text: title,
-                fontSize: 36,
-                fillColor: .white,
-                strokeColor: Color(white: 0.25),
-                lineWidth: 1.4
-            )
-            .frame(width: 168, height: 72)
-            .contentShape(Capsule())
+            ZStack {
+                if selected {
+                    Rectangle()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color(red: 0.42, green: 0.68, blue: 0.86).opacity(0.88),
+                                    Color(red: 0.24, green: 0.50, blue: 0.70).opacity(0.92)
+                                ],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                }
+                OutlinedText(
+                    text: title,
+                    fontSize: 36,
+                    fillColor: .white,
+                    strokeColor: Color(white: 0.25),
+                    lineWidth: 1.4
+                )
+            }
+            .frame(width: 172, height: 80)
+            .overlay(alignment: isLeft ? .trailing : .leading) {
+                Rectangle()
+                    .fill(Color(white: 0.25).opacity(0.5))
+                    .frame(width: 1)
+            }
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .glassEffect(
-            selected
-                ? .regular.tint(Color(red: 0.28, green: 0.65, blue: 0.92).opacity(0.45)).interactive()
-                : .clear.interactive(),
-            in: .capsule
-        )
     }
 
     // MARK: - Audio Panel
     private var audioPanel: some View {
-        HStack(spacing: 48) {
-            settingLabelPill("Volume", fontSize: 38)
-            sliderPill(value: $gameState.volume, range: 0.0...1.0) {
-                SoundManager.shared.playSound(named: gameState.selectedPrey.soundName)
+        ZStack {
+            Capsule(style: .continuous)
+                .fill(Color(red: 0.77, green: 0.89, blue: 1.0).opacity(0.76))
+                .glassEffect(.regular, in: Capsule(style: .continuous))
+                .overlay(
+                    Capsule(style: .continuous)
+                        .stroke(Color.white.opacity(0.65), lineWidth: 1.5)
+                )
+                .shadow(color: Color.black.opacity(0.24), radius: 10, y: 5)
+                .frame(width: 965, height: 186)
+
+            HStack(spacing: 48) {
+                settingLabelPill("Volume", fontSize: 38)
+                sliderPill(value: $gameState.volume, range: 0.0...1.0) {
+                    SoundManager.shared.playSound(named: gameState.selectedPrey.soundName)
+                }
             }
         }
-        .frame(width: 965, height: 186)
-        .glassEffect(
-            .regular.tint(Color(red: 0.55, green: 0.80, blue: 0.98).opacity(0.22)),
-            in: .capsule
-        )
     }
 
     // MARK: - Gioco Panel
     private var giocoPanel: some View {
-        VStack(spacing: 34) {
-            HStack(spacing: 48) {
-                settingLabelPill("Speed", fontSize: 40)
-                sliderPill(value: $gameState.speedMultiplier, range: 0.5...2.0, onEditingChanged: nil)
-            }
+        ZStack {
+            RoundedRectangle(cornerRadius: 100, style: .continuous)
+                .fill(Color(red: 0.77, green: 0.89, blue: 1.0).opacity(0.76))
+                .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 100, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 100, style: .continuous)
+                        .stroke(Color.white.opacity(0.65), lineWidth: 1.5)
+                )
+                .shadow(color: Color.black.opacity(0.24), radius: 10, y: 5)
+                .frame(width: 965, height: 460)
 
-            HStack(spacing: 48) {
-                settingLabelPill("Time", fontSize: 40)
-                segmentedValuePill(
-                    values: [1, 3, 5, 10, 0],
-                    selected: gameState.durationMinutes,
-                    label: { $0 == 0 ? "∞" : "\($0)" }
-                ) { val in
-                    gameState.durationMinutes = val
+            VStack(spacing: 34) {
+                HStack(spacing: 48) {
+                    settingLabelPill("Speed", fontSize: 40)
+                    sliderPill(value: $gameState.speedMultiplier, range: 0.5...2.0, onEditingChanged: nil)
                 }
-            }
 
-            HStack(spacing: 48) {
-                settingLabelPill("N.Target", fontSize: 34)
-                segmentedValuePill(
-                    values: [1, 2, 4, 6, 8],
-                    selected: gameState.preyCount,
-                    label: { "\($0)" }
-                ) { val in
-                    gameState.preyCount = val
+                HStack(spacing: 48) {
+                    settingLabelPill("Time", fontSize: 40)
+                    segmentedValuePill(
+                        values: [1, 3, 5, 10, 0],
+                        selected: gameState.durationMinutes,
+                        label: { $0 == 0 ? "∞" : "\($0)" }
+                    ) { val in
+                        gameState.durationMinutes = val
+                    }
+                }
+
+                HStack(spacing: 48) {
+                    settingLabelPill("N.Target", fontSize: 34)
+                    segmentedValuePill(
+                        values: [1, 2, 4, 6, 8],
+                        selected: gameState.preyCount,
+                        label: { "\($0)" }
+                    ) { val in
+                        gameState.preyCount = val
+                    }
                 }
             }
         }
-        .frame(width: 965, height: 460)
-        .glassEffect(
-            .regular.tint(Color(red: 0.55, green: 0.80, blue: 0.98).opacity(0.22)),
-            in: .rect(cornerRadius: 72)
-        )
     }
 
     // MARK: - Reusable Row Components
     private func settingLabelPill(_ title: String, fontSize: CGFloat) -> some View {
-        OutlinedText(
-            text: title,
-            fontSize: fontSize,
-            fillColor: labelFill,
-            strokeColor: Color(white: 0.18),
-            lineWidth: 1.4
-        )
-        .frame(width: 234, height: 88)
-        .glassEffect(.regular, in: .capsule)
+        ZStack {
+            Capsule(style: .continuous)
+                .fill(pillBg)
+                .glassEffect(.regular, in: Capsule(style: .continuous))
+                .overlay(
+                    Capsule(style: .continuous)
+                        .stroke(Color(white: 0.28), lineWidth: 1.4)
+                )
+                .shadow(color: Color.black.opacity(0.14), radius: 4, y: 2)
+                .frame(width: 234, height: 88)
+
+            OutlinedText(
+                text: title,
+                fontSize: fontSize,
+                fillColor: labelFill,
+                strokeColor: Color(white: 0.18),
+                lineWidth: 1.4
+            )
+        }
     }
 
     private func sliderPill(
@@ -147,10 +205,20 @@ struct SettingsView: View {
         range: ClosedRange<Double>,
         onEditingChanged: (() -> Void)?
     ) -> some View {
-        PurpleGlassSlider(value: value, range: range, onEnded: onEditingChanged)
-            .frame(width: 460, height: 44)
-            .frame(width: 627, height: 88)
-            .glassEffect(.regular, in: .capsule)
+        ZStack {
+            Capsule(style: .continuous)
+                .fill(pillBg)
+                .glassEffect(.regular, in: Capsule(style: .continuous))
+                .overlay(
+                    Capsule(style: .continuous)
+                        .stroke(Color(white: 0.28), lineWidth: 1.4)
+                )
+                .shadow(color: Color.black.opacity(0.14), radius: 4, y: 2)
+                .frame(width: 627, height: 88)
+
+            PurpleGlassSlider(value: value, range: range, onEnded: onEditingChanged)
+                .frame(width: 460, height: 44)
+        }
     }
 
     private func segmentedValuePill(
@@ -159,37 +227,70 @@ struct SettingsView: View {
         label: @escaping (Int) -> String,
         onSelect: @escaping (Int) -> Void
     ) -> some View {
-        HStack(spacing: 4) {
-            ForEach(values, id: \.self) { val in
-                let isSelected = (val == selected)
-                Button {
-                    SoundManager.shared.playSound(named: "ui_tap")
-                    withAnimation(.spring(response: 0.28, dampingFraction: 0.75)) {
-                        onSelect(val)
-                    }
-                } label: {
-                    OutlinedText(
-                        text: label(val),
-                        fontSize: label(val) == "∞" ? 46 : 40,
-                        fillColor: .white,
-                        strokeColor: Color(white: 0.22),
-                        lineWidth: 1.5
-                    )
-                    .frame(width: (615.0 / CGFloat(values.count)) - 4, height: 78)
-                    .contentShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                .glassEffect(
-                    isSelected
-                        ? .regular.tint(Color(red: 0.28, green: 0.65, blue: 0.92).opacity(0.45)).interactive()
-                        : .clear.interactive(),
-                    in: .capsule
+        ZStack {
+            Capsule(style: .continuous)
+                .fill(pillBg)
+                .glassEffect(.regular, in: Capsule(style: .continuous))
+                .overlay(
+                    Capsule(style: .continuous)
+                        .stroke(Color(white: 0.28), lineWidth: 1.4)
                 )
+                .shadow(color: Color.black.opacity(0.14), radius: 4, y: 2)
+                .frame(width: 627, height: 88)
+
+            HStack(spacing: 0) {
+                ForEach(values, id: \.self) { val in
+                    let isSelected = (val == selected)
+                    Button {
+                        SoundManager.shared.playSound(named: "ui_tap")
+                        withAnimation(.spring(response: 0.28, dampingFraction: 0.75)) {
+                            onSelect(val)
+                        }
+                    } label: {
+                        ZStack {
+                            Capsule(style: .continuous)
+                                .fill(
+                                    isSelected
+                                        ? LinearGradient(
+                                            colors: [
+                                                Color(red: 0.42, green: 0.68, blue: 0.86).opacity(0.88),
+                                                Color(red: 0.24, green: 0.50, blue: 0.70).opacity(0.92)
+                                            ],
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                        : LinearGradient(
+                                            colors: [
+                                                Color.white.opacity(0.25),
+                                                Color(red: 0.75, green: 0.85, blue: 0.95).opacity(0.35)
+                                            ],
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                )
+                                .overlay(
+                                    Capsule(style: .continuous)
+                                        .stroke(
+                                            isSelected ? Color.black : Color(white: 0.28),
+                                            lineWidth: isSelected ? 2.8 : 1.3
+                                        )
+                                )
+
+                            OutlinedText(
+                                text: label(val),
+                                fontSize: label(val) == "∞" ? 46 : 40,
+                                fillColor: .white,
+                                strokeColor: Color(white: 0.22),
+                                lineWidth: 1.5
+                            )
+                        }
+                        .frame(width: 627.0 / CGFloat(values.count), height: 86)
+                        .contentShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
             }
         }
-        .padding(.horizontal, 6)
-        .frame(width: 627, height: 88)
-        .glassEffect(.regular, in: .capsule)
     }
 }
 

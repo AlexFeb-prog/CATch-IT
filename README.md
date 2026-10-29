@@ -1,4 +1,4 @@
-# CATch It! 🐾
+# CATch It 🐾
 
 <p align="center">
   <strong>Il videogioco interattivo nativo per gatti su iPad e macOS</strong><br>
@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="Assets/app_icon.png" alt="CATch It! App Icon" width="120"/>
+  <img src="Assets/app_icon.png" alt="CATch It App Icon" width="120"/>
 </p>
 
 ---
