@@ -8,64 +8,63 @@ struct SettingsView: View {
     private let pillBg = Color(red: 0.78, green: 0.86, blue: 0.94).opacity(0.72)
 
     var body: some View {
-        DesignCanvas {
-            ZStack {
-                // 1. Back button (←) top-left with real Liquid Glass
-                Button {
-                    SoundManager.shared.playSound(named: "ui_tap")
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
-                        gameState.currentTab = .home
-                    }
-                } label: {
-                    ZStack {
-                        Capsule(style: .continuous)
-                            .fill(pillBg)
-                            .glassEffect(.regular, in: Capsule(style: .continuous))
-                            .overlay(
-                                Capsule(style: .continuous)
-                                    .stroke(Color(white: 0.32), lineWidth: 1.5)
-                            )
-                            .shadow(color: Color.black.opacity(0.20), radius: 5, y: 3)
-                            .frame(width: 98, height: 80)
-
-                        Image(systemName: "arrow.left")
-                            .font(.system(size: 36, weight: .bold))
-                            .foregroundStyle(.white)
-                    }
-                    .contentShape(Capsule())
+        ZStack {
+            // 1. Back button (<) top-left with real Liquid Glass and high-contrast outline
+            Button {
+                SoundManager.shared.playSound(named: "ui_tap")
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                    gameState.currentTab = .home
                 }
-                .buttonStyle(.plain)
-                .position(x: 249, y: 155)
-
-                // 2. Audio | Game segmented switch top-right with real Liquid Glass
-                HStack(spacing: 0) {
-                    segmentButton(.audio, title: "Audio", isLeft: true)
-                    segmentButton(.gioco, title: "Game", isLeft: false)
-                }
-                .background(
+            } label: {
+                ZStack {
                     Capsule(style: .continuous)
-                        .fill(Color(red: 0.82, green: 0.89, blue: 0.95).opacity(0.72))
+                        .fill(pillBg)
                         .glassEffect(.regular, in: Capsule(style: .continuous))
-                )
-                .clipShape(Capsule(style: .continuous))
-                .overlay(
-                    Capsule(style: .continuous)
-                        .stroke(Color(white: 0.22), lineWidth: 1.8)
-                )
-                .shadow(color: Color.black.opacity(0.18), radius: 6, y: 3)
-                .position(x: 1110, y: 155)
+                        .overlay(
+                            Capsule(style: .continuous)
+                                .stroke(Color(white: 0.28), lineWidth: 1.8)
+                        )
+                        .shadow(color: Color.black.opacity(0.20), radius: 5, y: 3)
+                        .frame(width: 98, height: 80)
 
-                // 3. Main Liquid Glass Panel (Audio or Game)
-                if section == .audio {
-                    audioPanel
-                        .position(x: 683, y: 405)
-                } else {
-                    giocoPanel
-                        .position(x: 683, y: 505)
+                    OutlinedText(
+                        text: "<",
+                        fontSize: 48,
+                        fillColor: .white,
+                        strokeColor: Color(white: 0.22),
+                        lineWidth: 1.6
+                    )
                 }
+                .contentShape(Capsule())
+            }
+            .buttonStyle(.plain)
+            .position(x: 249, y: 155)
 
-                // 4. Bottom Liquid Glass Dock
-                GlassDock(gameState: gameState)
+            // 2. Audio | Game segmented switch top-right with real Liquid Glass
+            HStack(spacing: 0) {
+                segmentButton(.audio, title: "Audio", isLeft: true)
+                segmentButton(.gioco, title: "Game", isLeft: false)
+            }
+            .background(
+                Capsule(style: .continuous)
+                    .fill(Color(red: 0.82, green: 0.89, blue: 0.95).opacity(0.72))
+                    .glassEffect(.regular, in: Capsule(style: .continuous))
+            )
+            .clipShape(Capsule(style: .continuous))
+            .overlay(
+                Capsule(style: .continuous)
+                    .stroke(Color(white: 0.22), lineWidth: 1.8)
+            )
+            .shadow(color: Color.black.opacity(0.18), radius: 6, y: 3)
+            .position(x: 1110, y: 155)
+
+            // 3. Main Liquid Glass Panel (Audio or Game)
+            if section == .audio {
+                audioPanel
+                    .position(x: 683, y: 405)
+            } else {
+                giocoPanel
+                    .position(x: 683, y: 505)
             }
         }
     }

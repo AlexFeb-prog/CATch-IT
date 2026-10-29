@@ -11,37 +11,32 @@ struct TypeGameView: View {
     ]
 
     var body: some View {
-        DesignCanvas {
-            ZStack {
-                // 1. Title "SELECT TOYS" matching main-3.sketch & Immagini 2
-                OutlinedText(
-                    text: "SELECT TOYS",
-                    fontSize: 64,
-                    fillColor: Color(red: 0.90, green: 0.74, blue: 0.64),
-                    strokeColor: Color(red: 0.52, green: 0.34, blue: 0.22),
-                    lineWidth: 3.5
-                )
-                .position(x: 683, y: 153)
+        ZStack {
+            // 1. Title "SELECT TOYS" matching main-3.sketch & Immagini 2
+            OutlinedText(
+                text: "SELECT TOYS",
+                fontSize: 64,
+                fillColor: Color(red: 0.90, green: 0.74, blue: 0.64),
+                strokeColor: Color(red: 0.52, green: 0.34, blue: 0.22),
+                lineWidth: 3.5
+            )
+            .position(x: 683, y: 153)
 
-                // 2. 4 Liquid Glass Toy Squircle Buttons
-                ForEach(cards, id: \.prey) { item in
-                    let isSelected = gameState.selectedPrey == item.prey
-                    ToyGlassButton(
-                        prey: item.prey,
-                        isSelected: isSelected,
-                        spriteWidth: item.spriteW,
-                        spriteHeight: item.spriteH
-                    ) {
-                        SoundManager.shared.playSound(named: item.prey.soundName)
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.72)) {
-                            gameState.selectedPrey = item.prey
-                        }
+            // 2. 4 Liquid Glass Toy Squircle Buttons
+            ForEach(cards, id: \.prey) { item in
+                let isSelected = gameState.selectedPrey == item.prey
+                ToyGlassButton(
+                    prey: item.prey,
+                    isSelected: isSelected,
+                    spriteWidth: item.spriteW,
+                    spriteHeight: item.spriteH
+                ) {
+                    SoundManager.shared.playSound(named: item.prey.soundName)
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.72)) {
+                        gameState.selectedPrey = item.prey
                     }
-                    .position(x: item.x, y: 495)
                 }
-
-                // 3. Bottom Liquid Glass Dock
-                GlassDock(gameState: gameState)
+                .position(x: item.x, y: 495)
             }
         }
     }
