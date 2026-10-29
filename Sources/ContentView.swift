@@ -37,8 +37,10 @@ struct ContentView: View {
                         GlassDock(gameState: gameState)
                     }
                 }
+                .ignoresSafeArea()
             }
         }
+        .ignoresSafeArea()
         .animation(.smooth(duration: 0.28), value: gameState.currentTab)
         .animation(.smooth(duration: 0.32), value: gameState.isPlaying)
         #if os(macOS)

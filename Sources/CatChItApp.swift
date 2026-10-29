@@ -1,13 +1,30 @@
 import SwiftUI
 #if os(macOS)
 import AppKit
+
+final class FullSizeWindowAccessor: NSView {
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        guard let window = self.window else { return }
+        window.titlebarAppearsTransparent = true
+        window.titleVisibility = .hidden
+        window.styleMask.insert(.fullSizeContentView)
+    }
+}
+
+struct WindowAccessorView: NSViewRepresentable {
+    func makeNSView(context: Context) -> FullSizeWindowAccessor {
+        FullSizeWindowAccessor()
+    }
+    func updateNSView(_ nsView: FullSizeWindowAccessor, context: Context) {}
+}
 #endif
 
 @main
 struct CatChItApp: App {
     init() {
         #if os(macOS)
-        // Imposta l'icona dell'applicazione nel Dock a runtime da codice
+        // Imposta dinamicamente l'icona dell'applicazione nel Dock da codice
         if let iconUrl = Bundle.main.url(forResource: "app_icon", withExtension: "png") ??
                          Bundle.main.url(forResource: "game_logo", withExtension: "png"),
            let image = NSImage(contentsOf: iconUrl) {
@@ -20,6 +37,10 @@ struct CatChItApp: App {
         WindowGroup {
             ContentView()
                 .preferredColorScheme(.light)
+                .ignoresSafeArea()
+                #if os(macOS)
+                .background(WindowAccessorView().allowsHitTesting(false))
+                #endif
         }
         #if os(macOS)
         .windowStyle(.hiddenTitleBar)

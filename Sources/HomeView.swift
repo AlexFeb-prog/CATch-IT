@@ -50,23 +50,23 @@ struct HomeView: View {
             }
             .buttonStyle(.plain)
             .scaleEffect(playPulse)
-            .position(x: 683, y: 338)
+            .position(x: 683, y: 355)
 
-            // 2. Cat on top: anchored flush to the top border so the flat cut-off edge is hidden off-screen
+            // 2. Cat on top: anchored flush into the top window border (top edge tucked beyond y=0)
             AssetImageView(name: "cat_peeking")
                 .frame(width: 534, height: 337)
-                .position(x: 683, y: 135 + catBounce)
+                .position(x: 683, y: 155 + catBounce)
                 .allowsHitTesting(false)
 
             // 3. Logo CATch It!
             AssetImageView(name: "logo_catchit")
                 .frame(width: 861, height: 214)
-                .position(x: 683, y: 595)
+                .position(x: 683, y: 610)
                 .allowsHitTesting(false)
         }
         .onAppear {
             withAnimation(.easeInOut(duration: 2.2).repeatForever(autoreverses: true)) {
-                catBounce = 5
+                catBounce = 4
             }
             withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) {
                 playPulse = 1.02
