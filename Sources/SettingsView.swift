@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @Bindable var gameState: GameState
     @State private var section: SettingsSection = .gioco
+    @Namespace private var switchNamespace
 
     private let labelFill = Color(red: 0.25, green: 0.45, blue: 0.62)
 
@@ -29,14 +30,9 @@ struct SettingsView: View {
             .glassEffect(.regular.interactive(), in: .capsule)
             .position(x: 249, y: 155)
 
-            // 2. Audio | Game segmented switch top-right with pure native Liquid Glass
-            HStack(spacing: 4) {
-                segmentButton(.audio, title: "Audio")
-                segmentButton(.gioco, title: "Game")
-            }
-            .padding(4)
-            .glassEffect(.regular, in: .capsule)
-            .position(x: 1110, y: 155)
+            // 2. Real Liquid Glass Switch (Audio | Game) top-right with sliding glass thumb
+            audioGameLiquidSwitch
+                .position(x: 1110, y: 155)
 
             // 3. Main Liquid Glass Panel (Audio or Game)
             if section == .audio {
@@ -49,32 +45,69 @@ struct SettingsView: View {
         }
     }
 
-    // MARK: - Segmented Switch Button
-    private func segmentButton(_ target: SettingsSection, title: String) -> some View {
-        let selected = section == target
+    // MARK: - True Liquid Glass Sliding Switch (Audio | Game)
+    private var audioGameLiquidSwitch: some View {
+        let isGame = (section == .gioco)
+        return ZStack(alignment: isGame ? .trailing : .leading) {
+            // Sliding Liquid Glass Thumb Indicator
+            Capsule(style: .continuous)
+                .fill(Color.clear)
+                .frame(width: 168, height: 70)
+                .glassEffect(
+                    .regular
+                        .tint(Color(red: 0.22, green: 0.62, blue: 0.96).opacity(0.52))
+                        .interactive(),
+                    in: .capsule
+                )
+                .padding(5)
+
+            // Labels row
+            HStack(spacing: 0) {
+                switchOptionButton(.audio, title: "Audio")
+                switchOptionButton(.gioco, title: "Game")
+            }
+        }
+        .frame(width: 346, height: 80)
+        .glassEffect(.clear.interactive(), in: .capsule)
+        .gesture(
+            DragGesture(minimumDistance: 8)
+                .onEnded { drag in
+                    if drag.translation.width > 15 && section != .gioco {
+                        SoundManager.shared.playSound(named: "ui_tap")
+                        withAnimation(.spring(response: 0.32, dampingFraction: 0.74)) {
+                            section = .gioco
+                        }
+                    } else if drag.translation.width < -15 && section != .audio {
+                        SoundManager.shared.playSound(named: "ui_tap")
+                        withAnimation(.spring(response: 0.32, dampingFraction: 0.74)) {
+                            section = .audio
+                        }
+                    }
+                }
+        )
+    }
+
+    private func switchOptionButton(_ target: SettingsSection, title: String) -> some View {
+        let selected = (section == target)
         return Button {
+            guard section != target else { return }
             SoundManager.shared.playSound(named: "ui_tap")
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
+            withAnimation(.spring(response: 0.32, dampingFraction: 0.74)) {
                 section = target
             }
         } label: {
             OutlinedText(
                 text: title,
-                fontSize: 36,
-                fillColor: .white,
-                strokeColor: Color(white: 0.25),
+                fontSize: 34,
+                fillColor: selected ? .white : Color.white.opacity(0.78),
+                strokeColor: Color(white: 0.22),
                 lineWidth: 1.4
             )
-            .frame(width: 168, height: 72)
+            .scaleEffect(selected ? 1.04 : 0.96)
+            .frame(width: 168, height: 70)
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
-        .glassEffect(
-            selected
-                ? .regular.tint(Color(red: 0.28, green: 0.65, blue: 0.92).opacity(0.45)).interactive()
-                : .clear.interactive(),
-            in: .capsule
-        )
     }
 
     // MARK: - Audio Panel
@@ -103,6 +136,7 @@ struct SettingsView: View {
             HStack(spacing: 48) {
                 settingLabelPill("Time", fontSize: 40)
                 segmentedValuePill(
+                    idPrefix: "time",
                     values: [1, 3, 5, 10, 0],
                     selected: gameState.durationMinutes,
                     label: { $0 == 0 ? "∞" : "\($0)" }
@@ -114,6 +148,7 @@ struct SettingsView: View {
             HStack(spacing: 48) {
                 settingLabelPill("N.Target", fontSize: 34)
                 segmentedValuePill(
+                    idPrefix: "target",
                     values: [1, 2, 4, 6, 8],
                     selected: gameState.preyCount,
                     label: { "\($0)" }
@@ -154,46 +189,60 @@ struct SettingsView: View {
     }
 
     private func segmentedValuePill(
+        idPrefix: String,
         values: [Int],
         selected: Int,
         label: @escaping (Int) -> String,
         onSelect: @escaping (Int) -> Void
     ) -> some View {
-        HStack(spacing: 4) {
-            ForEach(values, id: \.self) { val in
-                let isSelected = (val == selected)
-                Button {
-                    SoundManager.shared.playSound(named: "ui_tap")
-                    withAnimation(.spring(response: 0.28, dampingFraction: 0.75)) {
-                        onSelect(val)
-                    }
-                } label: {
-                    OutlinedText(
-                        text: label(val),
-                        fontSize: label(val) == "∞" ? 46 : 40,
-                        fillColor: .white,
-                        strokeColor: Color(white: 0.22),
-                        lineWidth: 1.5
-                    )
-                    .frame(width: (615.0 / CGFloat(values.count)) - 4, height: 78)
-                    .contentShape(Capsule())
-                }
-                .buttonStyle(.plain)
+        let count = CGFloat(values.count)
+        let itemWidth = 615.0 / count
+        let selectedIndex = CGFloat(values.firstIndex(of: selected) ?? 0)
+
+        return ZStack(alignment: .leading) {
+            // Sliding Liquid Glass Thumb Indicator
+            Capsule(style: .continuous)
+                .fill(Color.clear)
+                .frame(width: itemWidth - 4, height: 76)
                 .glassEffect(
-                    isSelected
-                        ? .regular.tint(Color(red: 0.28, green: 0.65, blue: 0.92).opacity(0.45)).interactive()
-                        : .clear.interactive(),
+                    .regular
+                        .tint(Color(red: 0.22, green: 0.62, blue: 0.96).opacity(0.52))
+                        .interactive(),
                     in: .capsule
                 )
+                .offset(x: 8 + selectedIndex * itemWidth)
+
+            HStack(spacing: 0) {
+                ForEach(values, id: \.self) { val in
+                    let isSelected = (val == selected)
+                    Button {
+                        SoundManager.shared.playSound(named: "ui_tap")
+                        withAnimation(.spring(response: 0.30, dampingFraction: 0.74)) {
+                            onSelect(val)
+                        }
+                    } label: {
+                        OutlinedText(
+                            text: label(val),
+                            fontSize: label(val) == "∞" ? 46 : 40,
+                            fillColor: isSelected ? .white : Color.white.opacity(0.78),
+                            strokeColor: Color(white: 0.22),
+                            lineWidth: 1.5
+                        )
+                        .scaleEffect(isSelected ? 1.05 : 0.95)
+                        .frame(width: itemWidth, height: 78)
+                        .contentShape(Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
             }
+            .padding(.horizontal, 6)
         }
-        .padding(.horizontal, 6)
         .frame(width: 627, height: 88)
-        .glassEffect(.regular, in: .capsule)
+        .glassEffect(.clear.interactive(), in: .capsule)
     }
 }
 
-/// Custom interactive purple slider matching Option_Audio & Option_Gioco
+/// Custom interactive Liquid Glass slider
 struct PurpleGlassSlider: View {
     @Binding var value: Double
     let range: ClosedRange<Double>
@@ -209,27 +258,22 @@ struct PurpleGlassSlider: View {
             let thumbX = clamped * width
 
             ZStack(alignment: .leading) {
-                // Background White Track
+                // Background Track
                 Capsule()
-                    .fill(Color.white.opacity(0.92))
+                    .fill(Color.white.opacity(0.65))
                     .frame(height: 10)
-                    .shadow(color: Color.black.opacity(0.12), radius: 2, y: 2)
 
                 // Active Purple Track
                 Capsule()
                     .fill(purple)
                     .frame(width: max(10, thumbX), height: 10)
 
-                // Thumb Knob
+                // Liquid Glass Thumb Knob
                 Circle()
-                    .fill(purple)
-                    .frame(width: 30, height: 30)
-                    .overlay(
-                        Circle()
-                            .stroke(Color.white, lineWidth: 5)
-                    )
-                    .shadow(color: Color.black.opacity(0.22), radius: 4, y: 2)
-                    .offset(x: thumbX - 15)
+                    .fill(purple.opacity(0.85))
+                    .frame(width: 34, height: 34)
+                    .glassEffect(.regular.tint(purple.opacity(0.45)).interactive(), in: .circle)
+                    .offset(x: thumbX - 17)
             }
             .frame(maxHeight: .infinity)
             .contentShape(Rectangle())
