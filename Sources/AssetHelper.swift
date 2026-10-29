@@ -46,7 +46,7 @@ struct AssetImageView: View {
     }
 }
 
-/// Lays content out on the 1366x1024 Sketch artboard and scales it to fit any screen.
+/// Lays content out on the 1366x1024 Sketch artboard and scales it to fit any screen, anchored flush to the top edge.
 struct DesignCanvas<Content: View>: View {
     @ViewBuilder var content: () -> Content
 
@@ -55,8 +55,8 @@ struct DesignCanvas<Content: View>: View {
             let s = min(geo.size.width / 1366, geo.size.height / 1024)
             content()
                 .frame(width: 1366, height: 1024)
-                .scaleEffect(s)
-                .frame(width: geo.size.width, height: geo.size.height)
+                .scaleEffect(s, anchor: .top)
+                .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
         }
     }
 }
