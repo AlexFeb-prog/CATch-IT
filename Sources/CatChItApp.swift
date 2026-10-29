@@ -24,9 +24,9 @@ struct WindowAccessorView: NSViewRepresentable {
 struct CatChItApp: App {
     init() {
         #if os(macOS)
-        // Imposta dinamicamente l'icona dell'applicazione nel Dock da codice
-        if let iconUrl = Bundle.main.url(forResource: "app_icon", withExtension: "png") ??
-                         Bundle.main.url(forResource: "game_logo", withExtension: "png"),
+        // Imposta dinamicamente l'icona dell'applicazione nel Dock da codice con dimensioni standard macOS
+        if let iconUrl = Bundle.main.url(forResource: "AppIcon", withExtension: "icns") ??
+                         Bundle.main.url(forResource: "app_icon", withExtension: "png"),
            let image = NSImage(contentsOf: iconUrl) {
             NSApplication.shared.applicationIconImage = image
         }

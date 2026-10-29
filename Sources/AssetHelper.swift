@@ -58,5 +58,6 @@ struct DesignCanvas<Content: View>: View {
                 .scaleEffect(s, anchor: .top)
                 .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
         }
+        .ignoresSafeArea()
     }
 }

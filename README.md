@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="Assets/app_icon.png" alt="CATch It! App Icon" width="200"/>
+  <img src="Assets/app_icon.png" alt="CATch It! App Icon" width="120"/>
 </p>
 
 ---

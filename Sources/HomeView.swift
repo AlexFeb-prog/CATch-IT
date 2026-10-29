@@ -33,10 +33,10 @@ struct HomeView: View {
             .scaleEffect(playPulse)
             .position(x: 683, y: 355)
 
-            // 2. Cat on top: anchored flush into the top window border (top edge tucked beyond y=0)
+            // 2. Cat on top: centered visually over the Play button and attached flush to the top window border
             AssetImageView(name: "cat_peeking")
                 .frame(width: 534, height: 337)
-                .position(x: 683, y: 155 + catBounce)
+                .position(x: 667, y: 155 + catBounce)
                 .allowsHitTesting(false)
 
             // 3. Logo CATch It!
