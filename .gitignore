@@ -1,0 +1,13 @@
+# Xcode & Build artifacts
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+
+# macOS
+.DS_Store
+
+# App bundle & distribution zip
+CatChIt.app
+CatChIt_macOS.zip
