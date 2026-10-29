@@ -6,8 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="Assets/app_icon.png" alt="CATch It! App Icon" width="180"/><br/>
-  <img src="Assets/logo_catchit.png" alt="CATch It! Logo" width="260"/>
+  <img src="Assets/app_icon.png" alt="CATch It! App Icon" width="200"/>
 </p>
 
 ---

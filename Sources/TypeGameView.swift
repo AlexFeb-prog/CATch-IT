@@ -12,7 +12,7 @@ struct TypeGameView: View {
 
     var body: some View {
         ZStack {
-            // 1. Title "SELECT TOYS" matching main-3.sketch & Immagini 2
+            // 1. Title "SELECT TOYS"
             OutlinedText(
                 text: "SELECT TOYS",
                 fontSize: 64,
@@ -22,7 +22,7 @@ struct TypeGameView: View {
             )
             .position(x: 683, y: 153)
 
-            // 2. 4 Liquid Glass Toy Squircle Buttons
+            // 2. 4 Real Liquid Glass Toy Squircle Buttons
             ForEach(cards, id: \.prey) { item in
                 let isSelected = gameState.selectedPrey == item.prey
                 ToyGlassButton(
@@ -42,7 +42,7 @@ struct TypeGameView: View {
     }
 }
 
-/// Real Liquid Glass Squircle Toy Button matching main-3.sketch & Immagini 2
+/// Real Native Liquid Glass Squircle Toy Button
 struct ToyGlassButton: View {
     let prey: PreyType
     let isSelected: Bool
@@ -53,37 +53,18 @@ struct ToyGlassButton: View {
     var body: some View {
         Button(action: action) {
             VStack(spacing: 18) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 100, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 0.71, green: 0.83, blue: 0.88).opacity(0.68),
-                                    Color(red: 0.35, green: 0.56, blue: 0.67).opacity(0.76)
-                                ],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
-                        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 100, style: .continuous))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 100, style: .continuous)
-                                .stroke(
-                                    isSelected ? Color.black : Color(white: 0.68),
-                                    lineWidth: isSelected ? 4.0 : 1.5
-                                )
-                        )
-                        .shadow(
-                            color: Color.black.opacity(isSelected ? 0.34 : 0.22),
-                            radius: isSelected ? 10 : 6,
-                            y: 5
-                        )
-                        .frame(width: 246.5, height: 240)
-
-                    AssetImageView(name: prey.spriteImageName)
-                        .frame(width: spriteWidth, height: spriteHeight)
-                        .scaleEffect(isSelected ? 1.06 : 1.0)
-                }
+                AssetImageView(name: prey.spriteImageName)
+                    .frame(width: spriteWidth, height: spriteHeight)
+                    .scaleEffect(isSelected ? 1.08 : 1.0)
+                    .frame(width: 246.5, height: 240)
+                    .contentShape(RoundedRectangle(cornerRadius: 68, style: .continuous))
+                    .glassEffect(
+                        (isSelected
+                            ? Glass.regular.tint(Color(red: 0.30, green: 0.72, blue: 0.96).opacity(0.40))
+                            : Glass.regular
+                        ).interactive(),
+                        in: .rect(cornerRadius: 68)
+                    )
 
                 OutlinedText(
                     text: prey.rawValue.uppercased(),
@@ -98,7 +79,7 @@ struct ToyGlassButton: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .scaleEffect(isSelected ? 1.03 : 1.0)
+        .scaleEffect(isSelected ? 1.04 : 1.0)
     }
 }
 

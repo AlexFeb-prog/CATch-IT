@@ -7,7 +7,7 @@ struct HomeView: View {
 
     var body: some View {
         ZStack {
-            // 1. Play Button with real Apple Liquid Glass (placed below cat paws in Z-order)
+            // 1. Play Button with pure native Apple Liquid Glass (placed below cat paws in Z-order)
             Button {
                 SoundManager.shared.playSound(named: "catch_pop")
                 gameState.startSession()
@@ -19,36 +19,17 @@ struct HomeView: View {
                         .font(.system(size: 98, weight: .semibold, design: .rounded))
                 }
                 .foregroundStyle(.white)
+                .shadow(color: .black.opacity(0.18), radius: 6, y: 2)
                 .frame(width: 662, height: 231)
-                .background(
-                    Capsule(style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 0.70, green: 0.90, blue: 0.99).opacity(0.78),
-                                    Color(red: 0.56, green: 0.84, blue: 0.98).opacity(0.68)
-                                ],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
-                        .glassEffect(.regular, in: Capsule(style: .continuous))
-                        .overlay(
-                            Capsule(style: .continuous)
-                                .stroke(
-                                    LinearGradient(
-                                        colors: [Color.white.opacity(0.95), Color.white.opacity(0.35)],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 2.5
-                                )
-                        )
-                        .shadow(color: Color(red: 0.15, green: 0.35, blue: 0.55).opacity(0.22), radius: 16, y: 8)
-                )
                 .contentShape(Capsule())
             }
             .buttonStyle(.plain)
+            .glassEffect(
+                .regular
+                    .tint(Color(red: 0.35, green: 0.78, blue: 0.98).opacity(0.32))
+                    .interactive(),
+                in: .capsule
+            )
             .scaleEffect(playPulse)
             .position(x: 683, y: 355)
 
