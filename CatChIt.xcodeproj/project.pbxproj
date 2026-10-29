@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE45465DB46D0AF38E8ECA8E /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FF45465DB46D0AF38E8ECA8E /* AppIcon.icns */; };
 		EE6A42F5EF9593BAC33106F2 /* app_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FF6A42F5EF9593BAC33106F2 /* app_icon.png */; };
 		EEE3A961388B83CDFA53DE1A /* game_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = FFE3A961388B83CDFA53DE1A /* game_logo.png */; };
 		DC0E0D21D1F290E60FA0694E /* yarn_long_00.png in Resources */ = {isa = PBXBuildFile; fileRef = D69AA4865E9EB8F854C9CEC1 /* yarn_long_00.png */; };
@@ -86,6 +87,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FF45465DB46D0AF38E8ECA8E /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = "AppIcon.icns"; sourceTree = "<group>"; };
 		FF6A42F5EF9593BAC33106F2 /* app_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app_icon.png"; sourceTree = "<group>"; };
 		FFE3A961388B83CDFA53DE1A /* game_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "game_logo.png"; sourceTree = "<group>"; };
 		D69AA4865E9EB8F854C9CEC1 /* yarn_long_00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yarn_long_00.png"; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 		53091F388309471F915CCA4F /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				FF45465DB46D0AF38E8ECA8E /* AppIcon.icns */,
 				FF6A42F5EF9593BAC33106F2 /* app_icon.png */,
 				FFE3A961388B83CDFA53DE1A /* game_logo.png */,
 				405BB79F8E1D4B08888ABB88 /* ambient_rustle.wav */,
@@ -341,6 +344,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE45465DB46D0AF38E8ECA8E /* AppIcon.icns in Resources */,
 				EE6A42F5EF9593BAC33106F2 /* app_icon.png in Resources */,
 				EEE3A961388B83CDFA53DE1A /* game_logo.png in Resources */,
 				BB95147F9566495BBD7FEAC0 /* ambient_rustle.wav in Resources */,
@@ -471,6 +475,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -498,6 +503,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_CFBundleIconFile = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
