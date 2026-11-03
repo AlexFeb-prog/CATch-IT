@@ -1,5 +1,6 @@
 import SwiftUI
 
+//toys declaration
 struct PreyEntity: Identifiable {
     let id = UUID()
     var type: PreyType
@@ -7,7 +8,7 @@ struct PreyEntity: Identifiable {
     var targetPosition: CGPoint
     var velocity: CGPoint = .zero
     var angle: Double = 0.0
-    var scale: CGFloat = 1.0
+    var scale: CGFloat = 2.3
     
     // Predatory behavioral state machine
     var isHiding: Bool = false
@@ -23,6 +24,12 @@ struct PreyEntity: Identifiable {
     var dashCooldown: Double = 0.0
     
     var lastSoundTimer: Double = 0.0
+    
+    var turnRate: Double = 0.0     // velocità di rotazione della direzione (rad/s)
+    var cruiseFactor: Double = 1.0 // ritmo di crociera, cambia lentamente
+    var cruiseTimer: Double = 0.0
+    var dashTimer: Double = 0.0    // durata dello scatto in corso
+    var dashFactor: Double = 1.0   // moltiplicatore di velocità durante lo scatto
 }
 
 struct PawRipple: Identifiable {

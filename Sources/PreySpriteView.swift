@@ -28,7 +28,7 @@ struct PreySpriteView: View {
             return String(format: "mouse_%02d", idx)
         case .thread:
             let idx = Int(prey.flutterTimer * 10) % 8
-            return String(format: "yarn_%02d", idx)
+            return String(format: "yarn_long_%02d", idx)
         case .mix:
             return "sprite_dice"
         }
